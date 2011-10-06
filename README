@@ -7,15 +7,15 @@ Example
 =======
 
 # Widget Schema...
-  create_table :widgets do |t|
-    t.string :name
-    t.fingerprints # creates integer fields for created_by and updated_by
-  end
+create_table :widgets do |t|
+  t.string :name
+  t.fingerprints # creates integer fields for created_by and updated_by
+end
 
 # User model...
-  class User < ActiveRecord::Base
-    cattr_accessor :fingerprint
-  end
+class User < ActiveRecord::Base
+  cattr_accessor :fingerprint
+end
 
 # Widget model...
 class Widget < ActiveRecord::Base
