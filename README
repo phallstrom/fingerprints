@@ -1,13 +1,45 @@
 HasFingerprints
 ===============
 
-Introduction goes here.
-
+Makes it easy to track who created/updated your models.
 
 Example
 =======
 
-Example goes here.
+# Widget Schema...
+  create_table :widgets do |t|
+    t.string :name
+    t.fingerprints # creates integer fields for created_by and updated_by
+  end
 
+# User model...
+  class User < ActiveRecord::Base
+    cattr_accessor :fingerprint
+  end
 
-Copyright (c) 2011 [name of plugin creator], released under the MIT license
+# Widget model...
+class Widget < ActiveRecord::Base
+  has_fingerprints
+
+  # If your 'user' is really a Person and perhaps has a 'current' method that
+  # returns the current person (or person.id) then
+  # you could do this:
+  #
+  # has_fingerprints :class_name => 'Person', :method => :current
+end
+
+Now, some how, some way you need to set User.fingerprint to either the User instance
+or User 'id' of the "currently logged in user".  One way to do this would be to put
+this in your controller assuming your controller has a :current_user method that will
+return the current user.
+
+before_filter { |c| User.fingerprint = c.send(:current_user) }
+
+At this point if you create/update a Widget it will set the created_by/updated_by attributes
+automatically.  You can also do this:
+
+@widget.creator => User instance...
+@widget.updator => User instance...
+
+--
+Copyright (c) 2011 Philip Hallstrom <philip@pjkh.com>, released under the MIT license
