@@ -3,6 +3,10 @@ HasFingerprints
 
 Makes it easy to track who created/updated your models.
 
+Warning
+=======
+This plugin isn't thread safe.
+
 Example
 =======
 
