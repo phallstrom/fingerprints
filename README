@@ -3,10 +3,6 @@ HasFingerprints
 
 Makes it easy to track who created/updated your models.
 
-Warning
-=======
-This plugin isn't thread safe.
-
 Example
 =======
 
@@ -18,18 +14,16 @@ end
 
 # User model...
 class User < ActiveRecord::Base
-  cattr_accessor :fingerprint
+  has_fingerprints
 end
 
 # Widget model...
 class Widget < ActiveRecord::Base
-  has_fingerprints
+  leaves_fingerprints
 
-  # If your 'user' is really a Person and perhaps has a 'current' method that
-  # returns the current person (or person.id) then
-  # you could do this:
+  # If your 'user' is really a Person you could do this:
   #
-  # has_fingerprints :class_name => 'Person', :method => :current
+  # leaves_fingerprints :class_name => 'Person'
 end
 
 Now, some how, some way you need to set User.fingerprint to either the User instance
@@ -44,6 +38,10 @@ automatically.  You can also do this:
 
 @widget.creator => User instance...
 @widget.updator => User instance...
+
+The default :class_name is 'User' and can be overridden like this:
+
+ActiveRecord::HasFingerprints::OPTIONS.merge!(:class_name => 'Person')
 
 --
 Copyright (c) 2011 Philip Hallstrom <philip@pjkh.com>, released under the MIT license

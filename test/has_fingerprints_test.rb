@@ -9,6 +9,9 @@ def setup_db
         t.column :name, :string
         t.fingerprints
       end
+      create_table :users do |t|
+        t.column :login, :string
+      end
     end
   end
 end
@@ -21,17 +24,22 @@ def teardown_db
   end
 end
 
-class User
-  cattr_accessor :fingerprint
+class User < ActiveRecord::Base
+  has_fingerprints
+  def self.table_name() "users" end
+end
+
+class InvalidUser < ActiveRecord::Base
+  def self.table_name() "users" end
 end
 
 class Widget < ActiveRecord::Base
-  has_fingerprints :class_name => 'User', :method => :fingerprint
+  leaves_fingerprints :class_name => 'User'
   def self.table_name() "widgets" end
 end
 
 class InvalidWidget < ActiveRecord::Base
-  has_fingerprints :class_name => 'User', :method => :invalid_method
+  leaves_fingerprints :class_name => 'InvalidUser'
   def self.table_name() "widgets" end
 end
 
@@ -76,61 +84,6 @@ class HasFingerprintsTest < ActiveSupport::TestCase
     assert_raise NoMethodError do
       @invalid_widget.save
     end
-  end
-
-end
-
-__END__
-require 'test_helper'
-
-
-
-################################################################################
-
-class HasWysiwygContentTest < ActiveSupport::TestCase
-
-  def test_responds_to_parsed_content_en
-    assert_respond_to @widget, :parsed_content_en
-  end
-
-  def test_responds_to_parsed_content_es
-    assert_respond_to @widget, :parsed_content_es
-  end
-
-  def test_responds_to_parsed_content
-    assert_respond_to @widget, :parsed_content
-  end
-
-  def test_parsed_content_encodes_emails
-    assert_no_match /philip@pjkh.com/, @widget.parsed_content_en
-  end
-
-  def test_parsed_content_converts_valid_substitutions
-    @my_var = Object.new
-    def @my_var.foo; "VALUE_OF_MY_VAR"; end
-    assert_no_match /\{\{some_var.foo\}\}/, @widget.parsed_content_en(:some_var => @my_var)
-    assert_match /VALUE_OF_MY_VAR/, @widget.parsed_content_en(:some_var => @my_var)
-  end
-
-  def test_parsed_content_does_not_convert_nonexistent_substitutions
-    assert_match /\{\{invalid.foo\}\}/, @widget.parsed_content_en
-  end
-
-  def test_saved_content_en_is_cleansed
-    @widget.save!
-    assert_no_match %r!http://(www|en).nourishinteractive(.pjkh)?.com!, @widget.content_en
-    assert_match %r!http://es.nourishinteractive(.pjkh)?.com!, @widget.content_en
-  end
-
-  def test_saved_content_es_is_cleansed
-    @widget.save!
-    assert_no_match %r!http://es.nourishinteractive(.pjkh)?.com!, @widget.content_es
-    assert_match %r!http://www.nourishinteractive(.pjkh)?.com!, @widget.content_es
-    assert_match %r!http://en.nourishinteractive(.pjkh)?.com!, @widget.content_es
-  end
-
-  def test_wysiwyg_fields_only_contains_table_fields
-    assert %w[content_en content_es], Widget.wysiwyg_attributes
   end
 
 end
