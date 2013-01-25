@@ -59,7 +59,7 @@ automatically.  You can also do this:
 
 The default `:class_name` is 'User' and can be overridden like this:
 
-    ActiveRecord::HasFingerprints::OPTIONS.merge!(:class_name => 'Person')
+    HasFingerprints::OPTIONS.merge!(:class_name => 'Person')
 
 ## Contributing
 

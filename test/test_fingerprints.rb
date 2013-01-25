@@ -32,6 +32,11 @@ class User < ActiveRecord::Base
   def self.table_name() "users" end
 end
 
+class Person < ActiveRecord::Base
+  has_fingerprints
+  def self.table_name() "person" end
+end
+
 class InvalidUser < ActiveRecord::Base
   def self.table_name() "users" end
 end
@@ -88,5 +93,14 @@ class HasFingerprintsTest < ActiveSupport::TestCase
       @invalid_widget.save
     end
   end
+
+  def test_fingerprints_set_on_alternate_model
+    User.fingerprint = 5
+    Person.fingerprint = 6
+    Fingerprints::OPTIONS.merge!(:class_name => 'Person')
+    @widget.save!
+    assert_equal 6, @widget.created_by
+  end
+
 
 end

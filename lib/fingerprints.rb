@@ -3,11 +3,11 @@ require 'fingerprints/active_record'
 require 'fingerprints/version'
 
 module Fingerprints
-  module Extensions
+  OPTIONS = {
+    :class_name => 'User'
+  }
 
-    OPTIONS = {
-      :class_name => 'User'
-    }
+  module Extensions
 
     def self.included(base)
       base.extend(ClassMethods)
