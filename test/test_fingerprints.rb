@@ -1,4 +1,7 @@
-require 'test_helper'
+require 'test/unit'
+require 'rubygems'
+require 'active_record'
+require 'fingerprints'
 
 ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
 

@@ -1,5 +1,9 @@
-module ActiveRecord
-  module HasFingerprints
+require 'active_record'
+require 'fingerprints/active_record'
+require 'fingerprints/version'
+
+module Fingerprints
+  module Extensions
 
     OPTIONS = {
       :class_name => 'User'
@@ -29,7 +33,7 @@ module ActiveRecord
       def leaves_fingerprints(options = {})
         options.reverse_merge!(OPTIONS)
 
-        include ActiveRecord::HasFingerprints::InstanceMethods
+        include Fingerprints::Extensions::InstanceMethods
 
         belongs_to :creator, :class_name => options[:class_name], :foreign_key => 'created_by'
         belongs_to :updater, :class_name => options[:class_name], :foreign_key => 'updated_by'
@@ -53,3 +57,5 @@ module ActiveRecord
 
   end
 end
+
+ActiveRecord::Base.send :include, Fingerprints::Extensions
