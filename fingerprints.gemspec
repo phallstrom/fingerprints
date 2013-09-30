@@ -11,6 +11,7 @@ Gem::Specification.new do |gem|
   gem.description   = %q{Make it easy to track who created/updated your models.}
   gem.summary       = %q{Make it easy to track who created/updated your models.}
   gem.homepage      = "https://github.com/phallstrom/fingerprints"
+  gem.license       = "MIT"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
